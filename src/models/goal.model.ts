@@ -17,7 +17,11 @@ export interface IGoal extends Document {
 
 const GoalSchema: Schema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  metric: { type: String, required: true },
+  metric: {
+    type: String,
+    required: true,
+    enum: ["likes", "comments", "shares", "views"],
+  },
   targetValue: { type: Number, required: true },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },

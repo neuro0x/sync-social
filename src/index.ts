@@ -16,6 +16,7 @@ import team from "./controllers/team.controller";
 import template from "./controllers/template.controller";
 import user from "./controllers/user.controller";
 import userRole from "./controllers/userRole.controller";
+import mongoose from "mongoose";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -49,6 +50,9 @@ app.use("*", (_req: Request, res: Response) => {
 
 const PORT = process.env.PORT || 3333;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(PORT, async () => {
+  console.log(`Server is running on port: ${PORT}.`);
+
+  const db = await mongoose.connect(process.env.MONGODB_URI || "");
+  console.log(`Connected to mongoDB: ${db.connection.name}`);
 });

@@ -9,7 +9,7 @@ import { IUser } from "./user.model";
 export interface IContentSuggestion extends Document {
   userId: IUser["_id"];
   topic: string;
-  format: string;
+  format?: string;
   hashtags: string[];
   suggestedTime?: Date;
   accepted: boolean;
@@ -19,7 +19,7 @@ export interface IContentSuggestion extends Document {
 const ContentSuggestionSchema: Schema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   topic: { type: String, required: true },
-  format: { type: String, required: true },
+  format: { type: String, enum: ["video", "image"] },
   hashtags: [{ type: String }],
   suggestedTime: { type: Date },
   accepted: { type: Boolean, default: false },

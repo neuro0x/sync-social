@@ -14,7 +14,6 @@ export interface IAnalytics extends Document {
     likes: number;
     comments: number;
     shares: number;
-    retweets: number;
     views: number;
   };
   timestamp: Date;
@@ -32,7 +31,6 @@ const AnalyticsSchema: Schema = new Schema({
     likes: { type: Number, default: 0 },
     comments: { type: Number, default: 0 },
     shares: { type: Number, default: 0 },
-    retweets: { type: Number, default: 0 },
     views: { type: Number, default: 0 },
   },
   timestamp: { type: Date, default: Date.now },
