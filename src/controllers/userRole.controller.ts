@@ -10,8 +10,8 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
     const newUserRole: IUserRole = new UserRole(req.body);
     await newUserRole.save();
     return res.status(201).json(newUserRole);
-  } catch (error) {
-    return res.status(400).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
   }
 });
 
@@ -20,8 +20,8 @@ router.get("/", authMiddleware, async (_req: Request, res: Response) => {
   try {
     const userRoles = await UserRole.find();
     return res.json(userRoles);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -36,11 +36,11 @@ router.get(
       if (!userUserRoles || userUserRoles.length === 0) {
         return res
           .status(404)
-          .json({ message: "No user roles found for this user" });
+          .json({ error: "No user roles found for this user" });
       }
       return res.json(userUserRoles);
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
     }
   }
 );
@@ -50,11 +50,11 @@ router.get("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const userRole = await UserRole.findById(req.params.id);
     if (!userRole) {
-      return res.status(404).json({ message: "User role not found" });
+      return res.status(404).json({ error: "User role not found" });
     }
     return res.json(userRole);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -67,11 +67,11 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
       { new: true }
     );
     if (!updatedUserRole) {
-      return res.status(404).json({ message: "User role not found" });
+      return res.status(404).json({ error: "User role not found" });
     }
     return res.json(updatedUserRole);
-  } catch (error) {
-    return res.status(400).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
   }
 });
 
@@ -80,11 +80,11 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const deletedUserRole = await UserRole.findByIdAndDelete(req.params.id);
     if (!deletedUserRole) {
-      return res.status(404).json({ message: "User role not found" });
+      return res.status(404).json({ error: "User role not found" });
     }
     return res.json({ message: "User role deleted successfully" });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 

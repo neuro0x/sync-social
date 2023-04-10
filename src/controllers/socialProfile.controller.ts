@@ -11,8 +11,8 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
     await newSocialProfile.save();
 
     return res.status(201).json(newSocialProfile);
-  } catch (error) {
-    return res.status(400).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
   }
 });
 
@@ -22,8 +22,8 @@ router.get("/", authMiddleware, async (_req: Request, res: Response) => {
     const socialProfiles = await SocialProfile.find();
 
     return res.json(socialProfiles);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -32,12 +32,12 @@ router.get("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const socialProfile = await SocialProfile.findById(req.params.id);
     if (!socialProfile) {
-      return res.status(404).json({ message: "Social profile not found" });
+      return res.status(404).json({ error: "Social profile not found" });
     }
 
     return res.json(socialProfile);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -52,12 +52,12 @@ router.get(
       if (!userSocialProfiles || userSocialProfiles.length === 0) {
         return res
           .status(404)
-          .json({ message: "No social profiles found for this user" });
+          .json({ error: "No social profiles found for this user" });
       }
 
       return res.json(userSocialProfiles);
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
     }
   }
 );
@@ -71,12 +71,12 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
       { new: true }
     );
     if (!updatedSocialProfile) {
-      return res.status(404).json({ message: "Social profile not found" });
+      return res.status(404).json({ error: "Social profile not found" });
     }
 
     return res.json(updatedSocialProfile);
-  } catch (error) {
-    return res.status(400).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
   }
 });
 
@@ -87,12 +87,12 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
       req.params.id
     );
     if (!deletedSocialProfile) {
-      return res.status(404).json({ message: "Social profile not found" });
+      return res.status(404).json({ error: "Social profile not found" });
     }
 
     return res.json({ message: "Social profile deleted successfully" });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 

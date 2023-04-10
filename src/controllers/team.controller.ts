@@ -10,8 +10,8 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
     const newTeam: ITeam = new Team(req.body);
     await newTeam.save();
     return res.status(201).json(newTeam);
-  } catch (error) {
-    return res.status(400).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
   }
 });
 
@@ -20,8 +20,8 @@ router.get("/", authMiddleware, async (_req: Request, res: Response) => {
   try {
     const teams = await Team.find();
     return res.json(teams);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -34,13 +34,11 @@ router.get(
       const { userId } = req.params;
       const userTeams = await Team.find({ userId });
       if (!userTeams || userTeams.length === 0) {
-        return res
-          .status(404)
-          .json({ message: "No teams found for this user" });
+        return res.status(404).json({ error: "No teams found for this user" });
       }
       return res.json(userTeams);
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
     }
   }
 );
@@ -50,11 +48,11 @@ router.get("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const team = await Team.findById(req.params.id);
     if (!team) {
-      return res.status(404).json({ message: "Team not found" });
+      return res.status(404).json({ error: "Team not found" });
     }
     return res.json(team);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -65,11 +63,11 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
       new: true,
     });
     if (!updatedTeam) {
-      return res.status(404).json({ message: "Team not found" });
+      return res.status(404).json({ error: "Team not found" });
     }
     return res.json(updatedTeam);
-  } catch (error) {
-    return res.status(400).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
   }
 });
 
@@ -78,11 +76,11 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const deletedTeam = await Team.findByIdAndDelete(req.params.id);
     if (!deletedTeam) {
-      return res.status(404).json({ message: "Team not found" });
+      return res.status(404).json({ error: "Team not found" });
     }
     return res.json({ message: "Team deleted successfully" });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 

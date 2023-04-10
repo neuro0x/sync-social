@@ -10,7 +10,7 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
     const newCustomAsset: ICustomAsset = new CustomAsset(req.body);
     await newCustomAsset.save();
     return res.status(201).json(newCustomAsset);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }
 });
@@ -21,7 +21,7 @@ router.get("/", authMiddleware, async (_req: Request, res: Response) => {
     const customAssets = await CustomAsset.find();
 
     return res.json(customAssets);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 });
@@ -37,11 +37,11 @@ router.get(
       if (!userCustomAssets || userCustomAssets.length === 0) {
         return res
           .status(404)
-          .json({ message: "No custom assets found for this user" });
+          .json({ error: "No custom assets found for this user" });
       }
 
       return res.json(userCustomAssets);
-    } catch (error) {
+    } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
   }
@@ -52,11 +52,11 @@ router.get("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const customAsset = await CustomAsset.findById(req.params.id);
     if (!customAsset) {
-      return res.status(404).json({ message: "Custom asset not found" });
+      return res.status(404).json({ error: "Custom asset not found" });
     }
 
     return res.json(customAsset);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 });
@@ -70,11 +70,11 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
       { new: true }
     );
     if (!updatedCustomAsset) {
-      return res.status(404).json({ message: "Custom asset not found" });
+      return res.status(404).json({ error: "Custom asset not found" });
     }
 
     return res.json(updatedCustomAsset);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }
 });
@@ -86,11 +86,11 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
       req.params.id
     );
     if (!deletedCustomAsset) {
-      return res.status(404).json({ message: "Custom asset not found" });
+      return res.status(404).json({ error: "Custom asset not found" });
     }
 
     return res.json({ message: "Custom asset deleted successfully" });
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 });

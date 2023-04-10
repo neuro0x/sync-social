@@ -11,7 +11,7 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
     await newAnalytics.save();
 
     return res.status(201).json(newAnalytics);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }
 });
@@ -22,7 +22,7 @@ router.get("/", authMiddleware, async (_req: Request, res: Response) => {
     const analyticsEntries = await Analytics.find();
 
     return res.json(analyticsEntries);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 });
@@ -32,11 +32,11 @@ router.get("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const analyticsEntry = await Analytics.findById(req.params.id);
     if (!analyticsEntry) {
-      return res.status(404).json({ message: "Analytics entry not found" });
+      return res.status(404).json({ error: "Analytics entry not found" });
     }
 
     return res.json(analyticsEntry);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 });
@@ -52,11 +52,11 @@ router.get(
       if (!userAnalytics || userAnalytics.length === 0) {
         return res
           .status(404)
-          .json({ message: "No analytics data found for this user" });
+          .json({ error: "No analytics data found for this user" });
       }
 
       return res.json(userAnalytics);
-    } catch (error) {
+    } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
   }
@@ -71,11 +71,11 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
       { new: true }
     );
     if (!updatedAnalytics) {
-      return res.status(404).json({ message: "Analytics entry not found" });
+      return res.status(404).json({ error: "Analytics entry not found" });
     }
 
     return res.json(updatedAnalytics);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }
 });
@@ -85,11 +85,11 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const deletedAnalytics = await Analytics.findByIdAndDelete(req.params.id);
     if (!deletedAnalytics) {
-      return res.status(404).json({ message: "Analytics entry not found" });
+      return res.status(404).json({ error: "Analytics entry not found" });
     }
 
     return res.json({ message: "Analytics entry deleted successfully" });
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 });

@@ -10,7 +10,7 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
     const newGoal: IGoal = new Goal(req.body);
     await newGoal.save();
     return res.status(201).json(newGoal);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }
 });
@@ -21,7 +21,7 @@ router.get("/", authMiddleware, async (_req: Request, res: Response) => {
     const goals = await Goal.find();
 
     return res.json(goals);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 });
@@ -35,13 +35,11 @@ router.get(
       const { userId } = req.params;
       const userGoals = await Goal.find({ userId });
       if (!userGoals || userGoals.length === 0) {
-        return res
-          .status(404)
-          .json({ message: "No goals found for this user" });
+        return res.status(404).json({ error: "No goals found for this user" });
       }
 
       return res.json(userGoals);
-    } catch (error) {
+    } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
   }
@@ -52,11 +50,11 @@ router.get("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const goal = await Goal.findById(req.params.id);
     if (!goal) {
-      return res.status(404).json({ message: "Goal not found" });
+      return res.status(404).json({ error: "Goal not found" });
     }
 
     return res.json(goal);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 });
@@ -68,11 +66,11 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
       new: true,
     });
     if (!updatedGoal) {
-      return res.status(404).json({ message: "Goal not found" });
+      return res.status(404).json({ error: "Goal not found" });
     }
 
     return res.json(updatedGoal);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }
 });
@@ -82,11 +80,11 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const deletedGoal = await Goal.findByIdAndDelete(req.params.id);
     if (!deletedGoal) {
-      return res.status(404).json({ message: "Goal not found" });
+      return res.status(404).json({ error: "Goal not found" });
     }
 
     return res.json({ message: "Goal deleted successfully" });
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 });

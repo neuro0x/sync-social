@@ -10,7 +10,7 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
     const newNotification: INotification = new Notification(req.body);
     await newNotification.save();
     return res.status(201).json(newNotification);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }
 });
@@ -21,7 +21,7 @@ router.get("/", authMiddleware, async (_req: Request, res: Response) => {
     const notifications = await Notification.find();
 
     return res.json(notifications);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 });
@@ -37,11 +37,11 @@ router.get(
       if (!userNotifications || userNotifications.length === 0) {
         return res
           .status(404)
-          .json({ message: "No notifications found for this user" });
+          .json({ error: "No notifications found for this user" });
       }
 
       return res.json(userNotifications);
-    } catch (error) {
+    } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
   }
@@ -52,11 +52,11 @@ router.get("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const notification = await Notification.findById(req.params.id);
     if (!notification) {
-      return res.status(404).json({ message: "Notification not found" });
+      return res.status(404).json({ error: "Notification not found" });
     }
 
     return res.json(notification);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 });
@@ -70,11 +70,11 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
       { new: true }
     );
     if (!updatedNotification) {
-      return res.status(404).json({ message: "Notification not found" });
+      return res.status(404).json({ error: "Notification not found" });
     }
 
     return res.json(updatedNotification);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }
 });
@@ -86,11 +86,11 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
       req.params.id
     );
     if (!deletedNotification) {
-      return res.status(404).json({ message: "Notification not found" });
+      return res.status(404).json({ error: "Notification not found" });
     }
 
     return res.json({ message: "Notification deleted successfully" });
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 });

@@ -13,9 +13,9 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
       req.body
     );
     await newContentSuggestion.save();
-    res.status(201).json(newContentSuggestion);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res.status(201).json(newContentSuggestion);
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
   }
 });
 
@@ -23,9 +23,9 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
 router.get("/", authMiddleware, async (_req: Request, res: Response) => {
   try {
     const contentSuggestions = await ContentSuggestion.find();
-    res.json(contentSuggestions);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.json(contentSuggestions);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
   }
 });
 
@@ -40,11 +40,11 @@ router.get(
       if (!userContentSuggestions || userContentSuggestions.length === 0) {
         return res
           .status(404)
-          .json({ message: "No content suggestions found for this user" });
+          .json({ error: "No content suggestions found for this user" });
       }
-      res.json(userContentSuggestions);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
+      return res.json(userContentSuggestions);
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message });
     }
   }
 );
@@ -54,11 +54,11 @@ router.get("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const contentSuggestion = await ContentSuggestion.findById(req.params.id);
     if (!contentSuggestion) {
-      return res.status(404).json({ message: "Content suggestion not found" });
+      return res.status(404).json({ error: "Content suggestion not found" });
     }
-    res.json(contentSuggestion);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.json(contentSuggestion);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
   }
 });
 
@@ -71,11 +71,11 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
       { new: true }
     );
     if (!updatedContentSuggestion) {
-      return res.status(404).json({ message: "Content suggestion not found" });
+      return res.status(404).json({ error: "Content suggestion not found" });
     }
-    res.json(updatedContentSuggestion);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res.json(updatedContentSuggestion);
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
   }
 });
 
@@ -86,11 +86,11 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
       req.params.id
     );
     if (!deletedContentSuggestion) {
-      return res.status(404).json({ message: "Content suggestion not found" });
+      return res.status(404).json({ error: "Content suggestion not found" });
     }
-    res.json({ message: "Content suggestion deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.json({ message: "Content suggestion deleted successfully" });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
   }
 });
 

@@ -14,7 +14,7 @@ router.post("/register", async (req: Request, res: Response) => {
     // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ error: "User already exists" });
     }
 
     // Hash the password
@@ -31,8 +31,8 @@ router.post("/register", async (req: Request, res: Response) => {
     });
 
     return res.status(201).json({ token });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -44,13 +44,13 @@ router.post("/login", async (req: Request, res: Response) => {
     // Check if the user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(400).json({ error: "Invalid email or password" });
     }
 
     // Compare the provided password with the stored hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(400).json({ error: "Invalid email or password" });
     }
 
     // Create and sign the JWT
@@ -59,8 +59,8 @@ router.post("/login", async (req: Request, res: Response) => {
     });
 
     return res.json({ token });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -71,8 +71,8 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
     await newUser.save();
 
     return res.status(201).json(newUser);
-  } catch (error) {
-    return res.status(400).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
   }
 });
 
@@ -82,8 +82,8 @@ router.get("/", authMiddleware, async (_req: Request, res: Response) => {
     const users = await User.find();
 
     return res.json(users);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -92,12 +92,12 @@ router.get("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     return res.json(user);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -108,12 +108,12 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
       new: true,
     });
     if (!updatedUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     return res.json(updatedUser);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -122,12 +122,12 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
     if (!deletedUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     return res.json({ message: "User deleted successfully" });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 

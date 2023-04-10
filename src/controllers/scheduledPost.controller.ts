@@ -10,8 +10,8 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
     const newScheduledPost: IScheduledPost = new ScheduledPost(req.body);
     await newScheduledPost.save();
     return res.status(201).json(newScheduledPost);
-  } catch (error) {
-    return res.status(400).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
   }
 });
 
@@ -20,8 +20,8 @@ router.get("/", authMiddleware, async (_req: Request, res: Response) => {
   try {
     const scheduledPosts = await ScheduledPost.find();
     return res.json(scheduledPosts);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -36,11 +36,11 @@ router.get(
       if (!userScheduledPosts || userScheduledPosts.length === 0) {
         return res
           .status(404)
-          .json({ message: "No scheduled posts found for this user" });
+          .json({ error: "No scheduled posts found for this user" });
       }
       return res.json(userScheduledPosts);
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
     }
   }
 );
@@ -50,11 +50,11 @@ router.get("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const scheduledPost = await ScheduledPost.findById(req.params.id);
     if (!scheduledPost) {
-      return res.status(404).json({ message: "Scheduled post not found" });
+      return res.status(404).json({ error: "Scheduled post not found" });
     }
     return res.json(scheduledPost);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -67,11 +67,11 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
       { new: true }
     );
     if (!updatedScheduledPost) {
-      return res.status(404).json({ message: "Scheduled post not found" });
+      return res.status(404).json({ error: "Scheduled post not found" });
     }
     return res.json(updatedScheduledPost);
-  } catch (error) {
-    return res.status(400).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
   }
 });
 
@@ -82,11 +82,11 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
       req.params.id
     );
     if (!deletedScheduledPost) {
-      return res.status(404).json({ message: "Scheduled post not found" });
+      return res.status(404).json({ error: "Scheduled post not found" });
     }
     return res.json({ message: "Scheduled post deleted successfully" });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 });
 

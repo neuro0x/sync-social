@@ -17,7 +17,7 @@ export const authMiddleware = (
 
   // Check if token exists
   if (!token) {
-    return res.status(401).json({ message: "No token, authorization denied" });
+    return res.status(401).json({ error: "No token, authorization denied" });
   }
 
   try {
@@ -31,9 +31,9 @@ export const authMiddleware = (
     req.userId = decodedToken.userId;
 
     next();
-  } catch (error) {
+  } catch (error: any) {
     return res
       .status(401)
-      .json({ message: "Token is not valid, authorization denied" });
+      .json({ error: "Token is not valid, authorization denied" });
   }
 };

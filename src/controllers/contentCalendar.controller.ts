@@ -11,9 +11,9 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
   try {
     const newContentCalendar: IContentCalendar = new ContentCalendar(req.body);
     await newContentCalendar.save();
-    res.status(201).json(newContentCalendar);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res.status(201).json(newContentCalendar);
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
   }
 });
 
@@ -21,9 +21,9 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
 router.get("/", authMiddleware, async (_req: Request, res: Response) => {
   try {
     const contentCalendarEntries = await ContentCalendar.find();
-    res.json(contentCalendarEntries);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.json(contentCalendarEntries);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
   }
 });
 
@@ -34,11 +34,11 @@ router.get("/:id", authMiddleware, async (req: Request, res: Response) => {
     if (!contentCalendarEntry) {
       return res
         .status(404)
-        .json({ message: "Content calendar entry not found" });
+        .json({ error: "Content calendar entry not found" });
     }
-    res.json(contentCalendarEntry);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.json(contentCalendarEntry);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
   }
 });
 
@@ -53,11 +53,11 @@ router.get(
       if (!userContentCalendar || userContentCalendar.length === 0) {
         return res
           .status(404)
-          .json({ message: "No content calendar entries found for this user" });
+          .json({ error: "No content calendar entries found for this user" });
       }
-      res.json(userContentCalendar);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
+      return res.json(userContentCalendar);
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message });
     }
   }
 );
@@ -73,11 +73,11 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
     if (!updatedContentCalendar) {
       return res
         .status(404)
-        .json({ message: "Content calendar entry not found" });
+        .json({ error: "Content calendar entry not found" });
     }
-    res.json(updatedContentCalendar);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res.json(updatedContentCalendar);
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
   }
 });
 
@@ -90,11 +90,11 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
     if (!deletedContentCalendar) {
       return res
         .status(404)
-        .json({ message: "Content calendar entry not found" });
+        .json({ error: "Content calendar entry not found" });
     }
-    res.json({ message: "Content calendar entry deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.json({ message: "Content calendar entry deleted successfully" });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
   }
 });
 

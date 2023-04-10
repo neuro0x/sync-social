@@ -11,7 +11,7 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
     await newPostHistory.save();
 
     return res.status(201).json(newPostHistory);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }
 });
@@ -22,7 +22,7 @@ router.get("/", authMiddleware, async (_req: Request, res: Response) => {
     const postHistories = await PostHistory.find();
 
     return res.json(postHistories);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 });
@@ -38,11 +38,11 @@ router.get(
       if (!userPostHistories || userPostHistories.length === 0) {
         return res
           .status(404)
-          .json({ message: "No post histories found for this user" });
+          .json({ error: "No post histories found for this user" });
       }
 
       return res.json(userPostHistories);
-    } catch (error) {
+    } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }
   }
@@ -53,11 +53,11 @@ router.get("/:id", authMiddleware, async (req: Request, res: Response) => {
   try {
     const postHistory = await PostHistory.findById(req.params.id);
     if (!postHistory) {
-      return res.status(404).json({ message: "Post history not found" });
+      return res.status(404).json({ error: "Post history not found" });
     }
 
     return res.json(postHistory);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 });
@@ -71,11 +71,11 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
       { new: true }
     );
     if (!updatedPostHistory) {
-      return res.status(404).json({ message: "Post history not found" });
+      return res.status(404).json({ error: "Post history not found" });
     }
 
     return res.json(updatedPostHistory);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }
 });
@@ -87,11 +87,11 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
       req.params.id
     );
     if (!deletedPostHistory) {
-      return res.status(404).json({ message: "Post history not found" });
+      return res.status(404).json({ error: "Post history not found" });
     }
 
     return res.json({ message: "Post history deleted successfully" });
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 });
